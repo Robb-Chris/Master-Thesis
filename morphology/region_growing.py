@@ -12,22 +12,24 @@ def region_growing(image, mask, seed_points, param):
     # Looping through all seed points to evaluate the segmentation
     segment_mask = np.zeros_like(mask)
 
-    height, width = image.shape
-    region = np.zeros_like(image, dtype=np.uint8) 
-    points_to_visit = [seed_points]
 
-    # The mean intensity of the region; starting with the seed intensity
-    region_mean = float(image[seed_points])
-    region[seed_points] = 255
+    for seed in seed_points:
+        height, width = image.shape
+        region = np.zeros_like(image, dtype=np.uint8) 
+        points_to_visit = seed
 
-    if param.get("connectivity", 8):
-        neighbours = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
-    else:
-        neighbours = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        # The mean intensity of the region; starting with the seed intensity
+        region_values = np.array([image[point] for point in seed])
+        region_mean = np.mean(region_values)
+        region[seed] = 255
 
-    # Loop until there are no more points to visit
-    while points_to_visit:
-        y, x = points_to_visit.pop(0)
+        if param.get("connectivity", 8):
+            neighbours = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
+        else:
+            neighbours = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        # print(points_to_visit)
+        y, x = points_to_visit
 
         # Check the neighbors of the current point
         for dy, dx in neighbours:
@@ -42,7 +44,7 @@ def region_growing(image, mask, seed_points, param):
 
             if intensity_diff < param.get("threshold", 22):
                 region[ny, nx] = 255
-                points_to_visit.append((ny, nx))
+                points_to_visit = (ny, nx)
                 # Recalculate the mean intensity of the region
                 region_mean = ((region_mean * np.sum(region == 255)) + int(image[ny, nx])) / (np.sum(region == 255) + 1)
         

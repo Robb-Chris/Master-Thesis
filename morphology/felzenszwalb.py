@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def felzenswalb(image, mask, seed_points, param):
+def felzenszwalb(image, mask, seed_points, param):
     """
     image: image to be segmented
     mask: mask of the image
