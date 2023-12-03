@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def watershed(image, mask, seed_points, param):
+def flooding(image, mask, seed_points, param):
     """
     image: image to be segmented
     mask: mask of the image
