@@ -2,3 +2,4 @@ Datasets/
 other/
 weights/
 morphology/__pycache__/
+*.code-workspace
